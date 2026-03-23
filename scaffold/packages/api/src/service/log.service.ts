@@ -111,6 +111,29 @@ export class LogService {
   }
   
   /**
+   * 检查是否启用指定级别的日志
+   * @param level 日志级别
+   */
+  isLevelEnabled(level: string): boolean {
+    return this.logger.isLevelEnabled(level);
+  }
+  
+  /**
+   * 获取原始logger实例
+   */
+  getLogger(): ILogger {
+    return this.logger;
+  }
+  
+  /**
+   * 创建子logger（用于模块划分）
+   * @param name 子logger名称
+   */
+  createChildLogger(name: string): ILogger {
+    return this.logger.child(name);
+  }
+  
+  /**
    * 添加上下文信息
    * @param context 上下文对象
    */
