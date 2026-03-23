@@ -1,0 +1,6 @@
+**/dist/**
+**/node_modules/**
+packages/aiko-boot-cli/templates/**
+scaffold/**
+**/*.test.ts
+**/*.spec.ts

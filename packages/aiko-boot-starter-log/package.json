@@ -1,6 +1,6 @@
 {
   "name": "@ai-partner-x/aiko-boot-starter-log",
-  "version": "0.1.1",
+  "version": "0.1.4",
   "description": "Aiko Boot Starter - Log Component with Winston Integration",
   "type": "module",
   "main": "./dist/index.js",
@@ -56,7 +56,7 @@
     }
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com",
+    "registry": "https://registry.npmjs.org",
     "access": "public"
   }
 }

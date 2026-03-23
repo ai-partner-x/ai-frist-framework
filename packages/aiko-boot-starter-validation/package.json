@@ -1,6 +1,6 @@
 {
   "name": "@ai-partner-x/aiko-boot-starter-validation",
-  "version": "0.1.1",
+  "version": "0.1.4",
   "description": "Aiko Boot - Validation Starter with class-validator compatible decorators",
   "type": "module",
   "main": "./dist/index.js",
@@ -25,7 +25,8 @@
     "@ai-partner-x/aiko-boot": "workspace:*",
     "class-validator": "^0.14.1",
     "class-transformer": "^0.5.1",
-    "reflect-metadata": "^0.2.1"
+    "reflect-metadata": "^0.2.1",
+    "tslib": "^2.8.1"
   },
   "devDependencies": {
     "tsup": "^8.0.0",
@@ -52,7 +53,7 @@
     "typescript"
   ],
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com",
+    "registry": "https://registry.npmjs.org",
     "access": "public"
   }
 }

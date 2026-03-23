@@ -1,6 +1,6 @@
 {
   "name": "@ai-partner-x/aiko-boot-starter-security",
-  "version": "0.1.1",
+  "version": "0.1.4",
   "description": "Aiko Boot - Spring Boot style Security Starter with authentication and authorization",
   "type": "module",
   "main": "./dist/index.js",
@@ -74,7 +74,7 @@
     "typescript"
   ],
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com",
+    "registry": "https://registry.npmjs.org",
     "access": "public"
   }
 }

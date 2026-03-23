@@ -1,6 +1,6 @@
 {
   "name": "@ai-partner-x/aiko-boot",
-  "version": "0.1.1",
+  "version": "0.1.4",
   "description": "Aiko Boot - Core Boot with DI, Configuration, and Auto-Configuration",
   "type": "module",
   "main": "./dist/index.js",
@@ -34,7 +34,8 @@
   },
   "dependencies": {
     "tsyringe": "^4.8.0",
-    "reflect-metadata": "^0.2.1"
+    "reflect-metadata": "^0.2.1",
+    "tslib": "^2.8.1"
   },
   "peerDependencies": {
     "react": ">=18.0.0"
@@ -51,7 +52,7 @@
     "typescript": "^5.3.0"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com",
+    "registry": "https://registry.npmjs.org",
     "access": "public"
   },
   "keywords": [

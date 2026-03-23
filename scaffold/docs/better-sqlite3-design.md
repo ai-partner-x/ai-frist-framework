@@ -1,15 +1,15 @@
 # 脚手架中 better-sqlite3 设计说明
 
-本文档梳理 **scaffold** 与 **aiko-boot-create** 的职责，并确定在脚手架中 better-sqlite3 的定位与设计。
+本文档梳理 **scaffold** 与 **aiko-boot-cli** 的职责，并确定在脚手架中 better-sqlite3 的定位与设计。
 
 ---
 
-## 一、scaffold 与 aiko-boot-create 职责梳理
+## 一、scaffold 与 aiko-boot-cli 职责梳理
 
 ### 1. scaffold（模板目录）
 
 - **位置**：`ai-frist-framework/scaffold/`
-- **角色**：作为 **项目模板**，被 aiko-boot-create 复制到用户指定目录，生成新项目。
+- **角色**：作为 **项目模板**，被 aiko-boot-cli 复制到用户指定目录，生成新项目。
 - **内容**：
   - **packages/api**：后端 API（aiko-boot + starter-orm），默认 SQLite（`./data/app.db`）
   - **packages/admin**、**packages/mobile**：前端应用
@@ -19,9 +19,9 @@
   - `packages/api/src/scripts/init-db.ts`：初始化数据库（建表、种子数据）
   - API 运行时通过 `@ai-partner-x/aiko-boot-starter-orm` 使用 **better-sqlite3** 连接同一文件
 
-### 2. aiko-boot-create（CLI）
+### 2. aiko-boot-cli（CLI）
 
-- **位置**：`ai-frist-framework/packages/aiko-boot-create/`
+- **位置**：`ai-frist-framework/packages/aiko-boot-cli/`
 - **角色**：从 `scaffold` 复制模板到目标目录，并做 **scope 替换**、**依赖覆盖**、**可选功能** 等后处理。
 - **主要能力**：
   - 交互/非交互：项目名、目标目录、是否带「基础系统」（登录、用户表等，鉴权由 @scaffold/core 提供）
@@ -72,7 +72,7 @@
   - 版本号需与 `packages/api` 的 `better-sqlite3` 一致。若 pnpm 安装后路径带 hash（如 `better-sqlite3@12.6.2_xxx`），请按实际 `.pnpm` 目录名调整路径后再执行。
 - **文档**：在 scaffold 的 README 中说明：首次或换环境后若 API 报 better-sqlite3 bindings 相关错误，可在**项目根**执行 `pnpm run rebuild:sqlite`（或按文档在 api 包内执行相应命令）。
 
-### 3.4 aiko-boot-create 的配合
+### 3.4 aiko-boot-cli 的配合
 
 - **withBaseSystem**：复制完整 scaffold，包含 api 的 better-sqlite3 依赖与 init-db（sql.js + sys_user）；生成后提示 `pnpm init-db` 与可选的 `pnpm run rebuild:sqlite`。
 - **bare**：仍复制 api 包（含 better-sqlite3 依赖、app.config 的 sqlite、init-db 脚本），但 init-db 为「无用户表」版；若后续用户不用 SQLite，可自行改配置与依赖。
@@ -96,6 +96,6 @@
 
 ## 五、与 pnpm overrides 的配合（类似 test-mobile）
 
-- **pnpm.overrides**：不由模板写死，由 **aiko-boot-create** 在生成项目时根据「目标目录 → 框架根目录」的相对路径动态写入，效果与 test-mobile 中手写的 `file:../ai-frist-framework/packages/...` 一致。
+- **pnpm.overrides**：不由模板写死，由 **aiko-boot-cli** 在生成项目时根据「目标目录 → 框架根目录」的相对路径动态写入，效果与 test-mobile 中手写的 `file:../ai-frist-framework/packages/...` 一致。
 - **pnpm.onlyBuiltDependencies**：在 scaffold 根 `package.json` 中配置 `["better-sqlite3"]`，仅编译该原生依赖，加快 install。
 - **postinstall**：在 scaffold 中配置 `pnpm rebuild better-sqlite3`，生成项目在 `pnpm install` 后自动重编 better-sqlite3，避免首次运行 API 时报 bindings 错误。
