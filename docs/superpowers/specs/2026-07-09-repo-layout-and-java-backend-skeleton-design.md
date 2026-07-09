@@ -17,6 +17,8 @@
 2. 同时提供跨领域通用的平台基础服务：用户、权限、认证、消息（短信/邮件/其他），并且未来可能有更多通用服务（本设计只搭骨架，不枚举完整服务清单）。
 3. 借这个机会把仓库顶层目录按 前端/后端/移动端/示例 重新分层。
 
+**长期方向（用户已确认）**：TS 服务端框架（`packages/` 下的 aiko-boot 核心 + 各 starter）和 `aiko-boot-codegen`（TS→Java 转译器）后续将被删除，这套 Java 框架是唯一的后端未来。因此 `backend/` = Java 的命名是自洽的，不存在"两套后端并存"的长期状态；前端组件库（`app/framework/*`）不受影响，继续保留并迁往 `frontend/`。删除 TS 服务端的时机与迁移方案不在本 spec 范围内。
+
 用户产品思路是"中台"：用户/认证/权限/消息等基础服务要能被多条产品线复用，复用方式既要支持"作为独立部署的微服务通过 API/事件调用"，也要支持"作为可组合打包的库在同一进程里合并部署"。
 
 ## 目标
@@ -119,5 +121,22 @@ backend/
 
 ## 后续（不在本次范围内）
 
-- Java 框架细节设计（`aiko-boot-core` 具体做什么、各 starter 的注解/配置项、`aiko-boot-services` 各服务的 API 契约与数据模型、是否需要额外的通用服务如文件存储/审计日志/字典/定时任务/网关限流等）——另开一次 brainstorming spec。
+- Java 框架细节设计——另开一次 brainstorming spec，**下方"Java 框架 spec 必答清单"是该 spec 的硬性输入**。
 - `packages/*`、`app/framework/*` 向 `backend/`、`frontend/` 的实际迁移——待 Java 框架落地、frontend 有实际内容承接时再做。
+- TS 服务端框架 + `aiko-boot-codegen` 的退役删除——待 Java 框架可用后单独规划。
+
+## Java 框架 spec 必答清单（用户已确认这些必须设计进去）
+
+以下各项在下一轮 Java 框架细节设计中必须给出明确答案，不允许"以后再说"：
+
+1. **多租户数据模型（硬约束）**：中台定位意味着用户/认证等服务被多产品线共用。所有平台服务的表**从第一天起就必须带租户/产品维度**（`tenant_id` 或等价字段），即使初期只有一个产品。该字段后补的代价（全量数据迁移 + 所有查询改造）远高于先建。spec 需定义：租户模型（共享表 + tenant_id 列 vs 独立 schema）、租户上下文如何在请求链路中传递（token claim / header / ThreadLocal 规约）。
+2. **合并部署规约（硬约束，`aiko-boot-core` 的核心职责）**：`platform-bootstrap` 合并多个 `*-biz` 时的冲突问题必须由框架规约从第一个服务开始就预防，而不是合并时补救：
+   - 配置项命名空间：每个服务的配置必须挂在自己的前缀下（如 `aiko.services.user.*`），禁止直接占用顶层通用键；
+   - 数据库迁移：每个 `*-biz` 独立管理自己的 Flyway/Liquibase 历史表（或表前缀隔离），合并进同一个库时互不干扰；
+   - Bean 命名：包路径 + 命名规约避免跨服务 Bean 名冲突；
+   - 本地调用优先：`*-api` 中的 Feign/RPC 接口在合并部署时必须自动走进程内本地实现而非 HTTP 回环（Feign 接口 + 本地 `@ConditionalOnBean` 实现优先的机制）。
+3. **身份域粒度评估**：认证（authentication）与授权（authorization）在请求链路上总是一起使用，拆成 `service-auth` + `service-permission` 两个独立服务会引入每请求一跳的代价。spec 需认真评估是否先合并为单一 `service-identity`（内部分模块），待有独立扩缩容需求再拆——拆比合容易。目录骨架阶段保留三个空模块不影响该决策。
+4. **框架层克制原则**：`aiko-boot-framework` 下每个 starter 必须回答"它比直接用 Spring Boot 官方 starter 多了什么"（统一响应体/异常码、合并部署规约、公司级默认配置等），答不上来的模块砍掉，避免纯粹换名转发的"薄封装"维护负担。
+5. **Spring Cloud 技术栈选型（第一个要回答的问题）**：Spring Cloud Alibaba（Nacos/Sentinel/Seata）vs Spring Cloud 原生（Consul/Config 等），连带确定 Spring Boot 3.x 版本与 JDK 版本（17 或 21）。这决定父 POM 的依赖管理和 `starter-cloud` 的全部内容。
+6. **数据扩展机制**：产品线对平台实体（如用户）的定制字段如何承载——扩展表、JSON 列、还是 SPI 挂钩，spec 需给出统一策略，避免各产品各自改平台表。
+7. **通用服务清单盘点**：除用户/认证/权限/消息外，评估文件存储、审计日志、数据字典、定时任务、ID 生成、网关/限流等是否纳入首批。
