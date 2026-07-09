@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: service-storage
+server:
+  port: 9104

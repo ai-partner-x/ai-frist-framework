@@ -5,34 +5,18 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.ai-partner-x</groupId>
-        <artifactId>aiko-boot-services</artifactId>
+        <artifactId>service-identity</artifactId>
         <version>0.1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>platform-bootstrap</artifactId>
+    <artifactId>service-identity-starter</artifactId>
     <packaging>jar</packaging>
-    <name>Platform Bootstrap</name>
-    <description>Combined-deployment shell: bundles selected *-biz modules into one process</description>
+    <name>Service Identity Starter</name>
 
     <dependencies>
         <dependency>
             <groupId>com.ai-partner-x</groupId>
-            <artifactId>service-user-biz</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.ai-partner-x</groupId>
             <artifactId>service-identity-biz</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.ai-partner-x</groupId>
-            <artifactId>service-message-biz</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.ai-partner-x</groupId>
-            <artifactId>service-storage-biz</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

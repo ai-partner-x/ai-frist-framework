@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: service-identity
+server:
+  port: 9102

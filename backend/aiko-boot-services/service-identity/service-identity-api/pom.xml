@@ -5,19 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.ai-partner-x</groupId>
-        <artifactId>aiko-boot-backend</artifactId>
+        <artifactId>service-identity</artifactId>
         <version>0.1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>aiko-boot-services</artifactId>
-    <packaging>pom</packaging>
-    <name>Aiko Boot Platform Services</name>
-
-    <modules>
-        <module>service-user</module>
-        <module>service-identity</module>
-        <module>service-message</module>
-        <module>service-storage</module>
-        <module>platform-bootstrap</module>
-    </modules>
+    <artifactId>service-identity-api</artifactId>
+    <packaging>jar</packaging>
+    <name>Service Identity API</name>
 </project>
