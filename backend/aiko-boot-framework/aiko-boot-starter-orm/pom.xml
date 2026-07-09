@@ -13,4 +13,42 @@
     <artifactId>aiko-boot-starter-orm</artifactId>
     <packaging>jar</packaging>
     <name>Aiko Boot Starter ORM</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.ai-partner-x</groupId>
+            <artifactId>aiko-boot-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
+            <version>3.5.9</version>
+        </dependency>
+        <!-- 3.5.9 起 TenantLineInnerInterceptor/PaginationInnerInterceptor/TenantLineHandler
+             等基于 JSqlParser 的插件类从 starter 拆分到这个独立 artifact，需要显式声明 -->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-jsqlparser</artifactId>
+            <version>3.5.9</version>
+        </dependency>
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-mysql</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+    </dependencies>
 </project>
