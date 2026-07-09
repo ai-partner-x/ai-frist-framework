@@ -2,3 +2,9 @@ packages:
   - 'packages/*'
   - '../../../packages/*'
   - '../../framework/*'
+allowBuilds:
+  '@swc/core': true
+  better-sqlite3: true
+  esbuild: true
+  protobufjs: true
+  sharp: true

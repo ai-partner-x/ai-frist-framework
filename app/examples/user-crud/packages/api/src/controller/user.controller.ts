@@ -275,8 +275,9 @@ export class UserController {
       username: user.username,
       email: user.email,
       age: user.age,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt,
+      // @JsonFormat 只格式化真正的 Date 实例，SQLite 存储/读取的是字符串，需先转换
+      createdAt: user.createdAt ? new Date(user.createdAt) : undefined,
+      updatedAt: user.updatedAt ? new Date(user.updatedAt) : undefined,
     };
     return response;
   }

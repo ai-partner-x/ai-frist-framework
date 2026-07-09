@@ -168,8 +168,8 @@ export class UserService {
       username: dto.username,
       email: dto.email,
       age: dto.age,
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     };
 
     await this.userMapper.insert(user);
@@ -191,7 +191,7 @@ export class UserService {
     if (dto.username !== undefined) user.username = dto.username;
     if (dto.email !== undefined) user.email = dto.email;
     if (dto.age !== undefined) user.age = dto.age;
-    user.updatedAt = new Date();
+    user.updatedAt = new Date().toISOString();
 
     await this.userMapper.updateById(user);
     // 返回更新后的用户
@@ -295,7 +295,7 @@ export class UserService {
     if (!user) {
       throw new Error('用户不存在');
     }
-    user.updatedAt = new Date();
+    user.updatedAt = new Date().toISOString();
     await this.userMapper.updateById(user);
     return (await this.userMapper.selectById(id))!;
   }

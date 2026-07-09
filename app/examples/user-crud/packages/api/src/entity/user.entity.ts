@@ -14,10 +14,11 @@ export class User {
   @TableField()
   age?: number;
 
+  // SQLite/Kysely 返回的是 TEXT 列的原始字符串，而非 Date 实例，
+  // better-sqlite3 也无法直接绑定 Date 对象，故此处类型为 string（ISO 字符串）
   @TableField({ column: 'created_at' })
-  createdAt?: Date;
-
+  createdAt?: string;
 
   @TableField({ column: 'updated_at' })
-  updatedAt?: Date;
+  updatedAt?: string;
 }
