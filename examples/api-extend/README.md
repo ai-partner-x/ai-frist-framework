@@ -13,7 +13,7 @@ pnpm install
 pnpm --filter "@ai-partner-x/*" build
 
 # 进入示例目录，启动开发服务器（支持热重载）
-cd app/examples/api-extend
+cd examples/api-extend
 pnpm dev
 ```
 
@@ -221,7 +221,7 @@ curl http://localhost:3003/api/form/tenant-info
 ## 代码结构
 
 ```
-app/examples/api-extend/
+examples/api-extend/
 ├── app.config.ts                       # Aiko Boot 配置（port、multipart、logging）
 ├── src/
 │   ├── server.ts                       # useExpressApp() + createApp() 自动配置

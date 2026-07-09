@@ -4,7 +4,7 @@
 
 ## 适用目录
 
-- `app/examples/mobile/` - 移动端示例应用
+- `examples/user-crud/packages/mall-mobile/` - 移动端示例应用
 
 ## 移动端规范检查
 

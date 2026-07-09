@@ -4,7 +4,7 @@
 
 ## 适用目录
 
-- `app/examples/admin/` - 管理后台示例应用
+- `examples/admin/` - 管理后台示例应用
 - `app/framework/admin-app/` - 管理后台框架应用
 
 ## 前端规范检查

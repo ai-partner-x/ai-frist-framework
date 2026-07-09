@@ -4,19 +4,19 @@
     {
       "name": "user-crud-admin",
       "runtimeExecutable": "pnpm",
-      "runtimeArgs": ["-C", "app/examples/user-crud/packages/admin", "dev"],
+      "runtimeArgs": ["-C", "examples/user-crud/packages/admin", "dev"],
       "port": 3000
     },
     {
       "name": "erp-admin",
       "runtimeExecutable": "pnpm",
-      "runtimeArgs": ["-C", "app/examples/admin", "dev"],
+      "runtimeArgs": ["-C", "examples/admin", "dev"],
       "port": 5173
     },
     {
       "name": "user-crud-mobile",
       "runtimeExecutable": "pnpm",
-      "runtimeArgs": ["-C", "app/examples/user-crud/packages/mall-mobile", "dev"],
+      "runtimeArgs": ["-C", "examples/user-crud/packages/mall-mobile", "dev"],
       "port": 3002
     }
   ]

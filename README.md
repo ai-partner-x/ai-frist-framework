@@ -76,7 +76,7 @@ pnpm docs:preview
 
 ```bash
 # 运行 TypeScript API 服务
-cd app/examples/user-crud/packages/api
+cd examples/user-crud/packages/api
 pnpm dev
 
 # 生成 Java 代码
@@ -273,7 +273,7 @@ export class UserController {
 ### 转译命令
 
 ```bash
-cd app/examples/user-crud/packages/api
+cd examples/user-crud/packages/api
 
 # 生成 Java 代码到 ./gen 目录
 pnpm java

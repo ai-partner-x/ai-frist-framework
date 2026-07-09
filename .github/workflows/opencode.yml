@@ -350,10 +350,10 @@ jobs:
             **服务端 Starter（packages/aiko-boot-starter-*/）：**
             ${{ env.SERVER_STARTER_RULES }}
 
-            **管理后台（app/examples/admin/）：**
+            **管理后台（examples/admin/）：**
             ${{ env.ADMIN_RULES }}
 
-            **移动端（app/examples/mobile/）：**
+            **移动端（examples/user-crud/packages/mall-mobile/）：**
             ${{ env.MOBILE_RULES }}
 
             ---

@@ -445,7 +445,7 @@ setCacheManager(new MapCacheManager());
 
 ## 完整示例：createApp + SQLite + 声明式缓存
 
-以下示例展示如何用 `createApp` 搭建一个真实的 API 服务：底层使用 **SQLite 持久化**（`@ai-partner-x/aiko-boot-starter-orm`），上层使用 **声明式缓存注解** 降低数据库访问压力，Redis 可选接入（未配置时缓存装饰器自动降级）。完整源码见 [`app/examples/cache-crud`](../../app/examples/cache-crud)。
+以下示例展示如何用 `createApp` 搭建一个真实的 API 服务：底层使用 **SQLite 持久化**（`@ai-partner-x/aiko-boot-starter-orm`），上层使用 **声明式缓存注解** 降低数据库访问压力，Redis 可选接入（未配置时缓存装饰器自动降级）。完整源码见 [`examples/cache-crud`](../../examples/cache-crud)。
 
 ### 目录结构
 
