@@ -12,7 +12,99 @@ importers:
         specifier: ^5.3.0
         version: 5.9.3
 
-  ../../../packages/aiko-boot:
+  ../../app/framework/admin-component:
+    dependencies:
+      '@tanstack/react-table':
+        specifier: ^8.21.3
+        version: 8.21.3(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      class-variance-authority:
+        specifier: ^0.7.1
+        version: 0.7.1
+      clsx:
+        specifier: ^2.1.1
+        version: 2.1.1
+      lucide-react:
+        specifier: ^0.575.0
+        version: 0.575.0(react@19.2.4)
+      next-themes:
+        specifier: ^0.4.6
+        version: 0.4.6(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      radix-ui:
+        specifier: ^1.4.3
+        version: 1.4.3(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      react-hook-form:
+        specifier: ^7.54.0
+        version: 7.71.2(react@19.2.4)
+      sonner:
+        specifier: ^1.7.4
+        version: 1.7.4(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      tailwind-merge:
+        specifier: ^3.5.0
+        version: 3.5.0
+    devDependencies:
+      '@types/react':
+        specifier: ^19.0.0
+        version: 19.2.14
+      '@types/react-dom':
+        specifier: ^19.0.0
+        version: 19.2.3(@types/react@19.2.14)
+      react:
+        specifier: ^19.2.3
+        version: 19.2.4
+      react-dom:
+        specifier: ^19.2.3
+        version: 19.2.4(react@19.2.4)
+      tsup:
+        specifier: ^8.0.0
+        version: 8.5.1(@swc/core@1.15.18)(jiti@2.6.1)(postcss@8.5.6)(tsx@4.21.0)(typescript@5.9.3)
+      typescript:
+        specifier: ^5.3.0
+        version: 5.9.3
+
+  ../../app/framework/api-component:
+    devDependencies:
+      tsup:
+        specifier: ^8.0.0
+        version: 8.5.1(@swc/core@1.15.18)(jiti@2.6.1)(postcss@8.5.6)(tsx@4.21.0)(typescript@5.9.3)
+      typescript:
+        specifier: ^5.3.0
+        version: 5.9.3
+
+  ../../app/framework/mall-component:
+    dependencies:
+      class-variance-authority:
+        specifier: ^0.7.1
+        version: 0.7.1
+      clsx:
+        specifier: ^2.1.1
+        version: 2.1.1
+      lucide-react:
+        specifier: ^0.575.0
+        version: 0.575.0(react@19.2.4)
+      tailwind-merge:
+        specifier: ^3.5.0
+        version: 3.5.0
+    devDependencies:
+      '@types/react':
+        specifier: ^19.0.0
+        version: 19.2.14
+      '@types/react-dom':
+        specifier: ^19.0.0
+        version: 19.2.3(@types/react@19.2.14)
+      react:
+        specifier: ^19.2.3
+        version: 19.2.4
+      react-dom:
+        specifier: ^19.2.3
+        version: 19.2.4(react@19.2.4)
+      tsup:
+        specifier: ^8.0.0
+        version: 8.5.1(@swc/core@1.15.18)(jiti@2.6.1)(postcss@8.5.6)(tsx@4.21.0)(typescript@5.9.3)
+      typescript:
+        specifier: ^5.3.0
+        version: 5.9.3
+
+  ../../packages/aiko-boot:
     dependencies:
       reflect-metadata:
         specifier: ^0.2.1
@@ -37,7 +129,7 @@ importers:
         specifier: ^5.3.0
         version: 5.9.3
 
-  ../../../packages/aiko-boot-cli:
+  ../../packages/aiko-boot-cli:
     dependencies:
       '@inquirer/prompts':
         specifier: ^8.3.2
@@ -59,7 +151,7 @@ importers:
         specifier: ^5.3.0
         version: 5.9.3
 
-  ../../../packages/aiko-boot-codegen:
+  ../../packages/aiko-boot-codegen:
     dependencies:
       commander:
         specifier: ^12.1.0
@@ -90,7 +182,7 @@ importers:
         specifier: ^29.1.0
         version: 29.4.11(@babel/core@7.29.0)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.29.0))(jest-util@29.7.0)(jest@29.7.0(@types/node@20.19.35)(ts-node@10.9.2(@swc/core@1.15.18)(@types/node@20.19.35)(typescript@5.9.3)))(typescript@5.9.3)
 
-  ../../../packages/aiko-boot-starter-cache:
+  ../../packages/aiko-boot-starter-cache:
     dependencies:
       '@ai-partner-x/aiko-boot':
         specifier: workspace:*
@@ -115,7 +207,7 @@ importers:
         specifier: ^5.3.0
         version: 5.9.3
 
-  ../../../packages/aiko-boot-starter-log:
+  ../../packages/aiko-boot-starter-log:
     dependencies:
       '@ai-partner-x/aiko-boot':
         specifier: workspace:*
@@ -146,7 +238,7 @@ importers:
         specifier: ^2.0.0
         version: 2.1.9(@types/node@20.19.35)(@vitest/ui@2.1.9)(lightningcss@1.31.1)
 
-  ../../../packages/aiko-boot-starter-mq:
+  ../../packages/aiko-boot-starter-mq:
     dependencies:
       '@ai-partner-x/aiko-boot':
         specifier: workspace:*
@@ -189,7 +281,7 @@ importers:
         specifier: ^1.2.0
         version: 1.6.1(@types/node@20.19.35)(lightningcss@1.31.1)
 
-  ../../../packages/aiko-boot-starter-orm:
+  ../../packages/aiko-boot-starter-orm:
     dependencies:
       '@ai-partner-x/aiko-boot':
         specifier: workspace:*
@@ -226,7 +318,7 @@ importers:
         specifier: ^5.3.0
         version: 5.9.3
 
-  ../../../packages/aiko-boot-starter-security:
+  ../../packages/aiko-boot-starter-security:
     dependencies:
       '@ai-partner-x/aiko-boot':
         specifier: workspace:*
@@ -305,7 +397,7 @@ importers:
         specifier: ^1.2.0
         version: 1.6.1(@types/node@20.19.35)(lightningcss@1.31.1)
 
-  ../../../packages/aiko-boot-starter-storage:
+  ../../packages/aiko-boot-starter-storage:
     dependencies:
       '@ai-partner-x/aiko-boot':
         specifier: workspace:*
@@ -339,7 +431,7 @@ importers:
         specifier: ^5.3.0
         version: 5.9.3
 
-  ../../../packages/aiko-boot-starter-validation:
+  ../../packages/aiko-boot-starter-validation:
     dependencies:
       '@ai-partner-x/aiko-boot':
         specifier: workspace:*
@@ -370,7 +462,7 @@ importers:
         specifier: ^5.3.0
         version: 5.9.3
 
-  ../../../packages/aiko-boot-starter-web:
+  ../../packages/aiko-boot-starter-web:
     dependencies:
       '@ai-partner-x/aiko-boot':
         specifier: workspace:*
@@ -416,7 +508,7 @@ importers:
         specifier: ^1.2.0
         version: 1.6.1(@types/node@20.19.35)(lightningcss@1.31.1)
 
-  ../../../packages/eslint-plugin-aiko-boot:
+  ../../packages/eslint-plugin-aiko-boot:
     dependencies:
       '@typescript-eslint/utils':
         specifier: ^6.21.0
@@ -438,103 +530,11 @@ importers:
         specifier: ^5.3.3
         version: 5.9.3
 
-  ../../framework/admin-component:
-    dependencies:
-      '@tanstack/react-table':
-        specifier: ^8.21.3
-        version: 8.21.3(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
-      class-variance-authority:
-        specifier: ^0.7.1
-        version: 0.7.1
-      clsx:
-        specifier: ^2.1.1
-        version: 2.1.1
-      lucide-react:
-        specifier: ^0.575.0
-        version: 0.575.0(react@19.2.4)
-      next-themes:
-        specifier: ^0.4.6
-        version: 0.4.6(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
-      radix-ui:
-        specifier: ^1.4.3
-        version: 1.4.3(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
-      react-hook-form:
-        specifier: ^7.54.0
-        version: 7.71.2(react@19.2.4)
-      sonner:
-        specifier: ^1.7.4
-        version: 1.7.4(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
-      tailwind-merge:
-        specifier: ^3.5.0
-        version: 3.5.0
-    devDependencies:
-      '@types/react':
-        specifier: ^19.0.0
-        version: 19.2.14
-      '@types/react-dom':
-        specifier: ^19.0.0
-        version: 19.2.3(@types/react@19.2.14)
-      react:
-        specifier: ^19.2.3
-        version: 19.2.4
-      react-dom:
-        specifier: ^19.2.3
-        version: 19.2.4(react@19.2.4)
-      tsup:
-        specifier: ^8.0.0
-        version: 8.5.1(@swc/core@1.15.18)(jiti@2.6.1)(postcss@8.5.6)(tsx@4.21.0)(typescript@5.9.3)
-      typescript:
-        specifier: ^5.3.0
-        version: 5.9.3
-
-  ../../framework/api-component:
-    devDependencies:
-      tsup:
-        specifier: ^8.0.0
-        version: 8.5.1(@swc/core@1.15.18)(jiti@2.6.1)(postcss@8.5.6)(tsx@4.21.0)(typescript@5.9.3)
-      typescript:
-        specifier: ^5.3.0
-        version: 5.9.3
-
-  ../../framework/mall-component:
-    dependencies:
-      class-variance-authority:
-        specifier: ^0.7.1
-        version: 0.7.1
-      clsx:
-        specifier: ^2.1.1
-        version: 2.1.1
-      lucide-react:
-        specifier: ^0.575.0
-        version: 0.575.0(react@19.2.4)
-      tailwind-merge:
-        specifier: ^3.5.0
-        version: 3.5.0
-    devDependencies:
-      '@types/react':
-        specifier: ^19.0.0
-        version: 19.2.14
-      '@types/react-dom':
-        specifier: ^19.0.0
-        version: 19.2.3(@types/react@19.2.14)
-      react:
-        specifier: ^19.2.3
-        version: 19.2.4
-      react-dom:
-        specifier: ^19.2.3
-        version: 19.2.4(react@19.2.4)
-      tsup:
-        specifier: ^8.0.0
-        version: 8.5.1(@swc/core@1.15.18)(jiti@2.6.1)(postcss@8.5.6)(tsx@4.21.0)(typescript@5.9.3)
-      typescript:
-        specifier: ^5.3.0
-        version: 5.9.3
-
   packages/admin:
     dependencies:
       '@aiko-boot/admin-component':
         specifier: workspace:*
-        version: link:../../../../framework/admin-component
+        version: link:../../../../app/framework/admin-component
       '@hookform/resolvers':
         specifier: ^5.2.2
         version: 5.2.2(react-hook-form@7.71.2(react@19.2.4))
@@ -589,25 +589,25 @@ importers:
     dependencies:
       '@ai-partner-x/aiko-boot':
         specifier: workspace:*
-        version: link:../../../../../packages/aiko-boot
+        version: link:../../../../packages/aiko-boot
       '@ai-partner-x/aiko-boot-codegen':
         specifier: workspace:*
-        version: link:../../../../../packages/aiko-boot-codegen
+        version: link:../../../../packages/aiko-boot-codegen
       '@ai-partner-x/aiko-boot-starter-cache':
         specifier: workspace:*
-        version: link:../../../../../packages/aiko-boot-starter-cache
+        version: link:../../../../packages/aiko-boot-starter-cache
       '@ai-partner-x/aiko-boot-starter-orm':
         specifier: workspace:*
-        version: link:../../../../../packages/aiko-boot-starter-orm
+        version: link:../../../../packages/aiko-boot-starter-orm
       '@ai-partner-x/aiko-boot-starter-storage':
         specifier: workspace:*
-        version: link:../../../../../packages/aiko-boot-starter-storage
+        version: link:../../../../packages/aiko-boot-starter-storage
       '@ai-partner-x/aiko-boot-starter-validation':
         specifier: workspace:*
-        version: link:../../../../../packages/aiko-boot-starter-validation
+        version: link:../../../../packages/aiko-boot-starter-validation
       '@ai-partner-x/aiko-boot-starter-web':
         specifier: workspace:*
-        version: link:../../../../../packages/aiko-boot-starter-web
+        version: link:../../../../packages/aiko-boot-starter-web
       better-sqlite3:
         specifier: ^12.6.2
         version: 12.6.2
@@ -665,7 +665,7 @@ importers:
     dependencies:
       '@ai-partner-x/aiko-boot-starter-web':
         specifier: workspace:*
-        version: link:../../../../../packages/aiko-boot-starter-web
+        version: link:../../../../packages/aiko-boot-starter-web
       '@user-crud/api':
         specifier: workspace:*
         version: link:../api
@@ -820,10 +820,6 @@ packages:
     engines: {node: '>=6.9.0'}
     peerDependencies:
       '@babel/core': ^7.0.0
-
-  '@babel/helper-plugin-utils@7.28.6':
-    resolution: {integrity: sha512-S9gzZ/bz83GRysI7gAD4wPT/AI3uCnY+9xn+Mx/KPs2JwHJIz1W8PZkg2cqyt3RNOBM8ejcXhV6y8Og7ly/Dug==}
-    engines: {node: '>=6.9.0'}
 
   '@babel/helper-plugin-utils@7.29.7':
     resolution: {integrity: sha512-G7sHYigPY17oO5SYWnfD/0MTBwVR781S/JI643e/JhUYgVgWE/61SoW3NH9KWUKyKq5LVh3npif99Wkt6j86Jw==}
@@ -5934,11 +5930,6 @@ packages:
     resolution: {integrity: sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA==}
     hasBin: true
 
-  semver@7.7.4:
-    resolution: {integrity: sha512-vFKC2IEtQnVhpT78h1Yp8wzwrf8CM+MzKMHGJZfBtzhZNycRFnXsHk6E5TxIkkMsgNS7mdX3AGB7x2QM2di4lA==}
-    engines: {node: '>=10'}
-    hasBin: true
-
   semver@7.8.5:
     resolution: {integrity: sha512-Y7/KDsb8LjooZpwaqGyulO6DQlksgCncchHGk+sZIY4SBvUocMBEFH5Ur1fI4dV+Jvl0w6cjvucaIi40puRioA==}
     engines: {node: '>=10'}
@@ -7000,8 +6991,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@babel/helper-plugin-utils@7.28.6': {}
-
   '@babel/helper-plugin-utils@7.29.7': {}
 
   '@babel/helper-string-parser@7.27.1': {}
@@ -7022,22 +7011,22 @@ snapshots:
   '@babel/plugin-syntax-async-generators@7.8.4(@babel/core@7.29.0)':
     dependencies:
       '@babel/core': 7.29.0
-      '@babel/helper-plugin-utils': 7.28.6
+      '@babel/helper-plugin-utils': 7.29.7
 
   '@babel/plugin-syntax-bigint@7.8.3(@babel/core@7.29.0)':
     dependencies:
       '@babel/core': 7.29.0
-      '@babel/helper-plugin-utils': 7.28.6
+      '@babel/helper-plugin-utils': 7.29.7
 
   '@babel/plugin-syntax-class-properties@7.12.13(@babel/core@7.29.0)':
     dependencies:
       '@babel/core': 7.29.0
-      '@babel/helper-plugin-utils': 7.28.6
+      '@babel/helper-plugin-utils': 7.29.7
 
   '@babel/plugin-syntax-class-static-block@7.14.5(@babel/core@7.29.0)':
     dependencies:
       '@babel/core': 7.29.0
-      '@babel/helper-plugin-utils': 7.28.6
+      '@babel/helper-plugin-utils': 7.29.7
 
   '@babel/plugin-syntax-import-attributes@7.29.7(@babel/core@7.29.0)':
     dependencies:
@@ -7047,12 +7036,12 @@ snapshots:
   '@babel/plugin-syntax-import-meta@7.10.4(@babel/core@7.29.0)':
     dependencies:
       '@babel/core': 7.29.0
-      '@babel/helper-plugin-utils': 7.28.6
+      '@babel/helper-plugin-utils': 7.29.7
 
   '@babel/plugin-syntax-json-strings@7.8.3(@babel/core@7.29.0)':
     dependencies:
       '@babel/core': 7.29.0
-      '@babel/helper-plugin-utils': 7.28.6
+      '@babel/helper-plugin-utils': 7.29.7
 
   '@babel/plugin-syntax-jsx@7.29.7(@babel/core@7.29.0)':
     dependencies:
@@ -7062,42 +7051,42 @@ snapshots:
   '@babel/plugin-syntax-logical-assignment-operators@7.10.4(@babel/core@7.29.0)':
     dependencies:
       '@babel/core': 7.29.0
-      '@babel/helper-plugin-utils': 7.28.6
+      '@babel/helper-plugin-utils': 7.29.7
 
   '@babel/plugin-syntax-nullish-coalescing-operator@7.8.3(@babel/core@7.29.0)':
     dependencies:
       '@babel/core': 7.29.0
-      '@babel/helper-plugin-utils': 7.28.6
+      '@babel/helper-plugin-utils': 7.29.7
 
   '@babel/plugin-syntax-numeric-separator@7.10.4(@babel/core@7.29.0)':
     dependencies:
       '@babel/core': 7.29.0
-      '@babel/helper-plugin-utils': 7.28.6
+      '@babel/helper-plugin-utils': 7.29.7
 
   '@babel/plugin-syntax-object-rest-spread@7.8.3(@babel/core@7.29.0)':
     dependencies:
       '@babel/core': 7.29.0
-      '@babel/helper-plugin-utils': 7.28.6
+      '@babel/helper-plugin-utils': 7.29.7
 
   '@babel/plugin-syntax-optional-catch-binding@7.8.3(@babel/core@7.29.0)':
     dependencies:
       '@babel/core': 7.29.0
-      '@babel/helper-plugin-utils': 7.28.6
+      '@babel/helper-plugin-utils': 7.29.7
 
   '@babel/plugin-syntax-optional-chaining@7.8.3(@babel/core@7.29.0)':
     dependencies:
       '@babel/core': 7.29.0
-      '@babel/helper-plugin-utils': 7.28.6
+      '@babel/helper-plugin-utils': 7.29.7
 
   '@babel/plugin-syntax-private-property-in-object@7.14.5(@babel/core@7.29.0)':
     dependencies:
       '@babel/core': 7.29.0
-      '@babel/helper-plugin-utils': 7.28.6
+      '@babel/helper-plugin-utils': 7.29.7
 
   '@babel/plugin-syntax-top-level-await@7.14.5(@babel/core@7.29.0)':
     dependencies:
       '@babel/core': 7.29.0
-      '@babel/helper-plugin-utils': 7.28.6
+      '@babel/helper-plugin-utils': 7.29.7
 
   '@babel/plugin-syntax-typescript@7.29.7(@babel/core@7.29.0)':
     dependencies:
@@ -7107,12 +7096,12 @@ snapshots:
   '@babel/plugin-transform-react-jsx-self@7.27.1(@babel/core@7.29.0)':
     dependencies:
       '@babel/core': 7.29.0
-      '@babel/helper-plugin-utils': 7.28.6
+      '@babel/helper-plugin-utils': 7.29.7
 
   '@babel/plugin-transform-react-jsx-source@7.27.1(@babel/core@7.29.0)':
     dependencies:
       '@babel/core': 7.29.0
-      '@babel/helper-plugin-utils': 7.28.6
+      '@babel/helper-plugin-utils': 7.29.7
 
   '@babel/template@7.28.6':
     dependencies:
@@ -9219,7 +9208,7 @@ snapshots:
 
   '@types/glob@9.0.0':
     dependencies:
-      glob: 7.2.3
+      glob: 10.5.0
 
   '@types/graceful-fs@4.1.9':
     dependencies:
@@ -9379,7 +9368,7 @@ snapshots:
       globby: 11.1.0
       is-glob: 4.0.3
       minimatch: 9.0.3
-      semver: 7.7.4
+      semver: 7.8.5
       ts-api-utils: 1.4.3(typescript@5.9.3)
     optionalDependencies:
       typescript: 5.9.3
@@ -9395,7 +9384,7 @@ snapshots:
       '@typescript-eslint/types': 6.21.0
       '@typescript-eslint/typescript-estree': 6.21.0(typescript@5.9.3)
       eslint: 8.57.1
-      semver: 7.7.4
+      semver: 7.8.5
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -9689,7 +9678,7 @@ snapshots:
 
   babel-plugin-istanbul@6.1.1:
     dependencies:
-      '@babel/helper-plugin-utils': 7.28.6
+      '@babel/helper-plugin-utils': 7.29.7
       '@istanbuljs/load-nyc-config': 1.1.0
       '@istanbuljs/schema': 0.1.6
       istanbul-lib-instrument: 5.2.1
@@ -9996,7 +9985,7 @@ snapshots:
       make-dir: 3.1.0
       onetime: 5.1.2
       pkg-up: 3.1.0
-      semver: 7.7.4
+      semver: 7.8.5
 
   confbox@0.1.8: {}
 
@@ -10860,7 +10849,7 @@ snapshots:
       '@babel/parser': 7.29.0
       '@istanbuljs/schema': 0.1.6
       istanbul-lib-coverage: 3.2.2
-      semver: 7.7.4
+      semver: 7.8.5
     transitivePeerDependencies:
       - supports-color
 
@@ -11154,7 +11143,7 @@ snapshots:
       jest-util: 29.7.0
       natural-compare: 1.4.0
       pretty-format: 29.7.0
-      semver: 7.7.4
+      semver: 7.8.5
     transitivePeerDependencies:
       - supports-color
 
@@ -11264,7 +11253,7 @@ snapshots:
       lodash.isstring: 4.0.1
       lodash.once: 4.1.1
       ms: 2.1.3
-      semver: 7.7.4
+      semver: 7.8.5
 
   jsprim@1.4.2:
     dependencies:
@@ -11453,7 +11442,7 @@ snapshots:
 
   make-dir@4.0.0:
     dependencies:
-      semver: 7.7.4
+      semver: 7.8.5
 
   make-error@1.3.6: {}
 
@@ -11609,7 +11598,7 @@ snapshots:
 
   node-abi@3.87.0:
     dependencies:
-      semver: 7.7.4
+      semver: 7.8.5
 
   node-hex@1.0.1: {}
 
@@ -12237,8 +12226,6 @@ snapshots:
 
   semver@6.3.1: {}
 
-  semver@7.7.4: {}
-
   semver@7.8.5: {}
 
   send@0.19.2:
@@ -12274,7 +12261,7 @@ snapshots:
     dependencies:
       '@img/colour': 1.1.0
       detect-libc: 2.1.2
-      semver: 7.7.4
+      semver: 7.8.5
     optionalDependencies:
       '@img/sharp-darwin-arm64': 0.34.5
       '@img/sharp-darwin-x64': 0.34.5

@@ -10,7 +10,7 @@ importers:
     dependencies:
       '@aiko-boot/admin-component':
         specifier: workspace:*
-        version: link:../../framework/admin-component
+        version: link:../../app/framework/admin-component
       lucide-react:
         specifier: ^0.575.0
         version: 0.575.0(react@19.2.7)
@@ -52,7 +52,7 @@ importers:
         specifier: ^6.3.5
         version: 6.4.3(@types/node@24.13.2)(jiti@1.21.7)
 
-  ../../framework/admin-component:
+  ../../app/framework/admin-component:
     dependencies:
       '@tanstack/react-table':
         specifier: ^8.21.3
@@ -101,7 +101,7 @@ importers:
         specifier: ^5.3.0
         version: 5.9.3
 
-  ../../framework/api-component:
+  ../../app/framework/api-component:
     devDependencies:
       tsup:
         specifier: ^8.0.0
@@ -110,7 +110,7 @@ importers:
         specifier: ^5.3.0
         version: 5.9.3
 
-  ../../framework/mall-component:
+  ../../app/framework/mall-component:
     dependencies:
       class-variance-authority:
         specifier: ^0.7.1
