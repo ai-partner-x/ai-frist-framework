@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.ai-partner-x</groupId>
+        <artifactId>aiko-boot-framework</artifactId>
+        <version>0.1.0-SNAPSHOT</version>
+    </parent>
+
+    <!-- MyBatis-Plus 统一配置：租户行级拦截器、分页、字段自动填充、逻辑删除 -->
+    <artifactId>aiko-boot-starter-orm</artifactId>
+    <packaging>jar</packaging>
+    <name>Aiko Boot Starter ORM</name>
+</project>

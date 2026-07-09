@@ -52,3 +52,6 @@ tmp
 **/gen/
 package-lock.json
 .claude/settings.local.json
+
+# Java / Maven
+backend/**/target/
