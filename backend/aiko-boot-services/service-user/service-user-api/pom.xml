@@ -12,4 +12,11 @@
     <artifactId>service-user-api</artifactId>
     <packaging>jar</packaging>
     <name>Service User API</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
+        </dependency>
+    </dependencies>
 </project>

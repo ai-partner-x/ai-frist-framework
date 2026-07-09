@@ -1,5 +1,13 @@
 spring:
   application:
     name: service-user
+  datasource:
+    url: jdbc:h2:mem:service_user;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  flyway:
+    locations: classpath:db/migration/user
+    table: flyway_schema_history_user
 server:
   port: 9101
