@@ -94,8 +94,8 @@ backend/
 
 **必须同步更新的引用**：
 
-1. `examples/user-crud/pnpm-workspace.yaml`：`../../../packages/*` → `../../packages/*`，`../../framework/*` → `../app/framework/*`
-2. `examples/admin/pnpm-workspace.yaml`：同样各少一层 `../`
+1. `examples/user-crud/pnpm-workspace.yaml`：`../../../packages/*` → `../../packages/*`，`../../framework/*` → `../../app/framework/*`（framework 的深度不变：原来从 `app/examples/user-crud` 上两级到 `app/`，现在从 `examples/user-crud` 上两级到根后进 `app/`）
+2. `examples/admin/pnpm-workspace.yaml`：`../../framework/*` → `../../app/framework/*`（同理）
 3. `.claude/launch.json`：三条已注册的启动配置（`user-crud-admin`、`erp-admin`、`user-crud-mobile`）路径同步更新
 4. 根 `README.md`："运行示例项目" 一节的 `cd app/examples/user-crud/...` 路径
 5. `docs/guide/api-development.md`、`packages/aiko-boot-starter-cache/README.md` 中的路径引用
