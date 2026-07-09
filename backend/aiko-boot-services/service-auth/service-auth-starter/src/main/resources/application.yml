@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: service-auth
+server:
+  port: 9102

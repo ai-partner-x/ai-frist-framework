@@ -13,7 +13,7 @@
 
     <modules>
         <module>aiko-boot-framework</module>
-        <!-- Task 7 会在此处追加 <module>aiko-boot-services</module> -->
+        <module>aiko-boot-services</module>
     </modules>
 
     <properties>

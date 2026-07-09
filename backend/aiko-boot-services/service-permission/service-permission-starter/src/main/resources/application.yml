@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: service-permission
+server:
+  port: 9103

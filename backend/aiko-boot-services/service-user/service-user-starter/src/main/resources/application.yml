@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: service-user
+server:
+  port: 9101
