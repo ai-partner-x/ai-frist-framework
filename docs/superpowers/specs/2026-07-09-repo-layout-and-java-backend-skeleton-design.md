@@ -58,12 +58,10 @@ backend/
 │
 ├── aiko-boot-framework/                   # 框架层聚合模块（库，供各 Java 项目 Maven 依赖引用）
 │   ├── pom.xml
-│   ├── aiko-boot-core/                    # 自动配置基座、统一响应/异常、通用注解
-│   ├── aiko-boot-starter-web/             # Web 层封装
-│   ├── aiko-boot-starter-orm/             # MyBatis-Plus 封装
-│   ├── aiko-boot-starter-cache/
-│   ├── aiko-boot-starter-log/
-│   └── aiko-boot-starter-cloud/           # Spring Cloud 接入封装（注册中心/配置中心/网关客户端）
+│   ├── aiko-boot-core/                    # 统一响应/异常码、租户上下文、合并部署规约、通用注解（并吸收缓存 key 租户前缀、MDC 日志上下文等小块价值）
+│   ├── aiko-boot-starter-web/             # 统一响应体自动包装、全局异常处理器、租户上下文 Filter、Jackson 统一配置
+│   ├── aiko-boot-starter-orm/             # MyBatis-Plus 统一配置：租户行级拦截器（TenantLineInnerInterceptor）、分页、字段自动填充、逻辑删除——租户硬约束的主要载体
+│   └── aiko-boot-starter-cloud/           # 跨服务租户/用户上下文透传拦截器 + 合并部署时 Feign 自动本地调用机制——两条硬约束的载体
 │
 └── aiko-boot-services/                    # 基础服务聚合模块（中台，跨产品线复用）
     ├── pom.xml
@@ -85,6 +83,8 @@ backend/
 | `*-biz` | 业务逻辑实现，无 `main()`，不可独立运行 | 被 `*-starter` 或 `platform-bootstrap` 组合进最终可运行产物；对外通过标准 Spring `@ConditionalOnMissingBean` 开放扩展点 |
 | `*-starter` | 独立部署壳，一个服务一个 `main()` | 直接部署为一个微服务进程 |
 | `platform-bootstrap` | 组合部署壳，依赖多个 `*-biz` | 把选中的若干基础服务合并部署进同一个进程（降低小规模场景的运维成本） |
+
+**框架层模块经过克制原则筛选（用户已确认）**：原方案中的 `starter-cache` 和 `starter-log` 已砍掉——对比官方 starter 的增量（缓存 key 租户前缀、MDC 租户/用户上下文、统一 JSON 日志格式）体量太小，不足以成模块，其价值并入 `aiko-boot-core`；将来若出现多级缓存等真实需求、能回答"比官方多什么"时再立项。
 
 `aiko-boot-framework` 下各模块本次只建空 `pom.xml`（继承父 POM，声明 `packaging: jar`），`aiko-boot-services` 下各模块只建空 `pom.xml` + 一个空的 `src/main/java/<package>/.gitkeep` 占位（`*-starter` 和 `platform-bootstrap` 额外放一个空的 `Application.java` 骨架，保证 `mvn spring-boot:run` 至少能空跑起来）。具体依赖版本、包名规范（groupId 用 `com.ai-partner-x`，与 TS 侧 `aiko-boot-codegen` 生成的 pom.xml 保持一致）、Spring Boot/Cloud 版本选型，写实施计划时确定。
 
