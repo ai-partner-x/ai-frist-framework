@@ -54,4 +54,9 @@ public class UserController {
     public void delete(@PathVariable Long id) {
         userApi.delete(id);
     }
+
+    @GetMapping("/by-username/{username}")
+    public UserDTO getByUsername(@PathVariable String username) {
+        return userApi.getByUsername(username);
+    }
 }
