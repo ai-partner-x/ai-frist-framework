@@ -1,5 +1,22 @@
 spring:
   application:
     name: platform-bootstrap
+  datasource:
+    url: jdbc:h2:mem:platform_bootstrap;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  flyway:
+    enabled: false
+  data:
+    redis:
+      host: localhost
+      port: 6379
+sa-token:
+  token-name: satoken
+  timeout: 2592000
+  is-concurrent: true
+  is-share: false
+  token-style: uuid
 server:
   port: 9100
