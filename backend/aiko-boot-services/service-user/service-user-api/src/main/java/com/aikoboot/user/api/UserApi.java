@@ -10,6 +10,8 @@ public interface UserApi {
 
     UserDTO getById(Long id);
 
+    UserDTO getByUsername(String username);
+
     List<UserDTO> list();
 
     UserDTO create(CreateUserRequest request);

@@ -1,6 +1,7 @@
 package com.aikoboot.user.service;
 
 import com.aikoboot.core.exception.BizException;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.aikoboot.user.api.UserApi;
 import com.aikoboot.user.api.dto.CreateUserRequest;
 import com.aikoboot.user.api.dto.UpdateUserRequest;
@@ -30,6 +31,12 @@ public class UserServiceImpl implements UserApi {
             throw new BizException(UserErrorCode.USER_NOT_FOUND);
         }
         return toDTO(user);
+    }
+
+    @Override
+    public UserDTO getByUsername(String username) {
+        User user = userMapper.selectOne(new QueryWrapper<User>().eq("username", username));
+        return user != null ? toDTO(user) : null;
     }
 
     @Override

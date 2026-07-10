@@ -63,6 +63,25 @@ class UserServiceImplTest {
     }
 
     @Test
+    void getByUsername_whenUserExists_returnsMappedDTO() {
+        when(userMapper.selectOne(any())).thenReturn(sampleUser(1L));
+
+        UserDTO dto = service.getByUsername("alice");
+
+        assertThat(dto).isNotNull();
+        assertThat(dto.getUsername()).isEqualTo("alice");
+    }
+
+    @Test
+    void getByUsername_whenUserDoesNotExist_returnsNullWithoutThrowing() {
+        when(userMapper.selectOne(any())).thenReturn(null);
+
+        UserDTO dto = service.getByUsername("nonexistent");
+
+        assertThat(dto).isNull();
+    }
+
+    @Test
     void list_mapsEveryEntityToADTO() {
         when(userMapper.selectList(null)).thenReturn(List.of(sampleUser(1L), sampleUser(2L)));
 
