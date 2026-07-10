@@ -55,8 +55,16 @@ public class IdentityServiceImpl implements IdentityApi {
             throw new BizException(IdentityErrorCode.INVALID_CREDENTIALS);
         }
 
-        if (credential.getLockedUntil() != null && credential.getLockedUntil().isAfter(LocalDateTime.now())) {
-            throw new BizException(IdentityErrorCode.ACCOUNT_LOCKED);
+        if (credential.getLockedUntil() != null) {
+            if (credential.getLockedUntil().isAfter(LocalDateTime.now())) {
+                throw new BizException(IdentityErrorCode.ACCOUNT_LOCKED);
+            }
+            // 锁定窗口已过期：必须在校验密码前把失败计数清零，否则下一次输错密码会
+            // 立刻把计数从 5（上次锁定时的值）加到 6，重新触发锁定阈值，导致账号
+            // 锁定一次之后再也拿不到正常的 5 次尝试机会。
+            resetLoginFailure(credential);
+            credential.setLoginFailCount(0);
+            credential.setLockedUntil(null);
         }
 
         if (!passwordEncoder.matches(request.getPassword(), credential.getPasswordHash())) {
@@ -117,6 +125,12 @@ public class IdentityServiceImpl implements IdentityApi {
     @Override
     public CurrentUserDTO getCurrentUser(Long userId) {
         UserDTO user = userApi.getById(userId);
+        if (user == null) {
+            // 独立部署下 UserApi 走 Feign：远程用户在会话签发之后被删除/不可达时，
+            // unwrap() 返回 null 而不是抛异常（合并部署下本地 UserServiceImpl.getById
+            // 查不到会直接抛 USER_NOT_FOUND，这里补上同样的保护，避免裸 NPE 变成 500）。
+            throw new BizException(IdentityErrorCode.USER_NOT_FOUND);
+        }
         CurrentUserDTO dto = new CurrentUserDTO();
         dto.setUserId(user.getId());
         dto.setUsername(user.getUsername());

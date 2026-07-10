@@ -138,4 +138,44 @@ class IdentityServiceImplTest {
 
         verify(passwordEncoder, times(0)).matches(any(), any());
     }
+
+    @Test
+    void login_whenLockWindowExpired_resetsCounterBeforeCheckingPassword() {
+        // 回归测试：修复前，锁定窗口过期后第一次输错密码会把计数从锁定时的 5
+        // 直接加到 6，立刻再次触发锁定阈值，导致账号锁一次之后再也拿不到正常的
+        // 5 次尝试机会。修复后，过期的锁定必须先把计数清零，这里验证清零确实发生了。
+        UserDTO user = activeUser();
+        when(userApi.getByUsername("alice")).thenReturn(user);
+        UserCredential credential = credentialFor(1L, "hashed");
+        credential.setLoginFailCount(5);
+        credential.setLockedUntil(LocalDateTime.now().minusMinutes(1)); // 已过期
+        when(userCredentialMapper.selectOne(any())).thenReturn(credential);
+        when(passwordEncoder.matches("wrong", "hashed")).thenReturn(false);
+        UserCredential afterIncrement = credentialFor(1L, "hashed");
+        afterIncrement.setLoginFailCount(1); // 清零后再 +1，应该是 1，不是 6
+        when(userCredentialMapper.selectById(100L)).thenReturn(afterIncrement);
+
+        LoginRequest request = new LoginRequest();
+        request.setUsername("alice");
+        request.setPassword("wrong");
+
+        assertThatThrownBy(() -> service.login(request)).isInstanceOf(BizException.class);
+
+        // 一次清零更新（resetLoginFailure）+ 一次原子自增（handleLoginFailure）= 2 次，
+        // 关键是不应该有第 3 次"设置 locked_until"的更新——afterIncrement 的计数是 1，
+        // 远低于阈值，不该重新锁定。
+        verify(userCredentialMapper, times(2)).update(isNull(), any(UpdateWrapper.class));
+    }
+
+    @Test
+    void getCurrentUser_whenUserApiReturnsNull_throwsUserNotFoundInsteadOfNpe() {
+        // 独立部署下 UserApi 走 Feign，远程用户在会话签发之后被删除/不可达时
+        // unwrap() 返回 null 而不是抛异常——这里验证不会因此产生裸 NPE。
+        when(userApi.getById(1L)).thenReturn(null);
+
+        assertThatThrownBy(() -> service.getCurrentUser(1L))
+                .isInstanceOf(BizException.class)
+                .extracting(ex -> ((BizException) ex).getCode())
+                .isEqualTo(404);
+    }
 }
