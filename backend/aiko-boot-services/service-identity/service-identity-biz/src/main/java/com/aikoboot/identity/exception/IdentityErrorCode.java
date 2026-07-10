@@ -5,7 +5,8 @@ import com.aikoboot.core.exception.ErrorCode;
 public enum IdentityErrorCode implements ErrorCode {
 
     INVALID_CREDENTIALS(401, "用户名或密码错误"),
-    ACCOUNT_LOCKED(423, "账号已被锁定，请稍后再试");
+    ACCOUNT_LOCKED(423, "账号已被锁定，请稍后再试"),
+    ACCOUNT_DISABLED(403, "账号已被禁用");
 
     private final int code;
     private final String message;

@@ -1,6 +1,7 @@
 package com.aikoboot.identity.service;
 
 import cn.dev33.satoken.stp.StpUtil;
+import com.aikoboot.core.context.CurrentUserContext;
 import com.aikoboot.core.exception.BizException;
 import com.aikoboot.identity.api.IdentityApi;
 import com.aikoboot.identity.api.dto.CurrentUserDTO;
@@ -12,6 +13,7 @@ import com.aikoboot.identity.mapper.UserCredentialMapper;
 import com.aikoboot.user.api.UserApi;
 import com.aikoboot.user.api.dto.UserDTO;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -43,6 +45,10 @@ public class IdentityServiceImpl implements IdentityApi {
             throw new BizException(IdentityErrorCode.INVALID_CREDENTIALS);
         }
 
+        if (user.getStatus() == null || user.getStatus() != 1) {
+            throw new BizException(IdentityErrorCode.ACCOUNT_DISABLED);
+        }
+
         UserCredential credential = userCredentialMapper.selectOne(
                 new QueryWrapper<UserCredential>().eq("user_id", user.getId()));
         if (credential == null) {
@@ -58,9 +64,7 @@ public class IdentityServiceImpl implements IdentityApi {
             throw new BizException(IdentityErrorCode.INVALID_CREDENTIALS);
         }
 
-        credential.setLoginFailCount(0);
-        credential.setLockedUntil(null);
-        userCredentialMapper.updateById(credential);
+        resetLoginFailure(credential);
 
         StpUtil.login(user.getId());
         String token = StpUtil.getTokenValue();
@@ -74,14 +78,35 @@ public class IdentityServiceImpl implements IdentityApi {
         return response;
     }
 
+    /**
+     * 原子自增失败计数，避免并发错误密码请求"读旧值再写回"导致计数少加、绕过锁定阈值的竞态条件。
+     * 达到阈值后再做一次原子更新设置 locked_until——即使多个并发请求都判定"该锁了"，
+     * 重复设置同一个字段是幂等的，不会有安全问题。
+     */
     private void handleLoginFailure(UserCredential credential) {
-        int failCount = credential.getLoginFailCount() == null ? 0 : credential.getLoginFailCount();
-        failCount++;
-        credential.setLoginFailCount(failCount);
-        if (failCount >= MAX_LOGIN_FAIL_COUNT) {
-            credential.setLockedUntil(LocalDateTime.now().plusMinutes(LOCK_MINUTES));
+        userCredentialMapper.update(null, new UpdateWrapper<UserCredential>()
+                .setSql("login_fail_count = login_fail_count + 1")
+                .set("updated_at", LocalDateTime.now())
+                .set("updated_by", CurrentUserContext.getUserId())
+                .eq("id", credential.getId()));
+
+        UserCredential refreshed = userCredentialMapper.selectById(credential.getId());
+        if (refreshed.getLoginFailCount() != null && refreshed.getLoginFailCount() >= MAX_LOGIN_FAIL_COUNT) {
+            userCredentialMapper.update(null, new UpdateWrapper<UserCredential>()
+                    .set("locked_until", LocalDateTime.now().plusMinutes(LOCK_MINUTES))
+                    .set("updated_at", LocalDateTime.now())
+                    .set("updated_by", CurrentUserContext.getUserId())
+                    .eq("id", refreshed.getId()));
         }
-        userCredentialMapper.updateById(credential);
+    }
+
+    private void resetLoginFailure(UserCredential credential) {
+        userCredentialMapper.update(null, new UpdateWrapper<UserCredential>()
+                .set("login_fail_count", 0)
+                .set("locked_until", null)
+                .set("updated_at", LocalDateTime.now())
+                .set("updated_by", CurrentUserContext.getUserId())
+                .eq("id", credential.getId()));
     }
 
     @Override
