@@ -1,5 +1,23 @@
 spring:
   application:
     name: service-identity
+  datasource:
+    url: jdbc:h2:mem:service_identity;DB_CLOSE_DELAY=-1;AUTO_SERVER=TRUE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  flyway:
+    locations: classpath:db/migration/identity
+    table: flyway_schema_history_identity
+  data:
+    redis:
+      host: localhost
+      port: 6379
+sa-token:
+  token-name: satoken
+  timeout: 2592000
+  is-concurrent: true
+  is-share: false
+  token-style: uuid
 server:
   port: 9102
