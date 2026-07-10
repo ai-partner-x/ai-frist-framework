@@ -35,7 +35,7 @@ public class MultiServiceFlywayConfig implements InitializingBean {
     @Override
     public void afterPropertiesSet() {
         for (String service : SERVICES_WITH_MIGRATIONS) {
-            Flyway.configure()
+            Flyway flyway = Flyway.configure()
                     .dataSource(dataSource)
                     .locations("classpath:db/migration/" + service)
                     .table("flyway_schema_history_" + service)
@@ -50,8 +50,20 @@ public class MultiServiceFlywayConfig implements InitializingBean {
                     // sys_user_credential 等表根本没建出来，直到真的调用相关接口才暴露）。
                     // 显式设成 "0"，让每个服务自己的 V1 迁移在 baseline 之上被当成新迁移正常执行。
                     .baselineVersion("0")
-                    .load()
-                    .migrate();
+                    .load();
+
+            // 防止重蹈 identity 那次的覆辙：如果 SERVICES_WITH_MIGRATIONS 里列了一个
+            // 服务名，但 classpath:db/migration/<service> 下实际上一个迁移脚本都没有
+            // （目录名打错、脚本忘了放进去），Flyway 不会报错——只会安安静静地什么都不做，
+            // 这个服务的表就永远不会被创建，而应用照样正常启动，直到真正调用到相关接口
+            // 才会暴露。这里改成启动期直接失败，而不是把这种误配置留到运行时才发现。
+            if (flyway.info().all().length == 0) {
+                throw new IllegalStateException(
+                        "No migrations found for service '" + service + "' at classpath:db/migration/" + service
+                                + " -- check SERVICES_WITH_MIGRATIONS and the migration directory");
+            }
+
+            flyway.migrate();
         }
     }
 }
