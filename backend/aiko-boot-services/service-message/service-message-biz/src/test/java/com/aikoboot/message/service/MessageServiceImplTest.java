@@ -67,7 +67,8 @@ class MessageServiceImplTest {
         service.sendSms(request);
 
         verify(messageLogMapper, times(1)).insert(argThat((MessageLog log) ->
-                "SMS".equals(log.getChannel()) && "FAILED".equals(log.getStatus()) && log.getErrorMessage() != null));
+                "SMS".equals(log.getChannel()) && "FAILED".equals(log.getStatus())
+                        && "短信模板不存在".equals(log.getErrorMessage())));
     }
 
     @Test

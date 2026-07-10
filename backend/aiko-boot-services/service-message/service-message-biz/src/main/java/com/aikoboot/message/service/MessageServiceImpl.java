@@ -6,6 +6,7 @@ import cn.jiguang.sdk.bean.push.audience.Audience;
 import cn.jiguang.sdk.bean.push.message.notification.NotificationMessage;
 import cn.jiguang.sdk.enums.platform.Platform;
 import com.aikoboot.core.context.CurrentUserContext;
+import com.aikoboot.core.exception.BizException;
 import com.aikoboot.message.api.MessageApi;
 import com.aikoboot.message.api.dto.InboxMessageDTO;
 import com.aikoboot.message.api.dto.SendEmailRequest;
@@ -14,6 +15,7 @@ import com.aikoboot.message.api.dto.SendPushRequest;
 import com.aikoboot.message.api.dto.SendSmsRequest;
 import com.aikoboot.message.channel.SmsProvider;
 import com.aikoboot.message.entity.InboxMessage;
+import com.aikoboot.message.exception.MessageErrorCode;
 import com.aikoboot.message.entity.MessageLog;
 import com.aikoboot.message.entity.SmsTemplate;
 import com.aikoboot.message.mapper.InboxMessageMapper;
@@ -60,7 +62,7 @@ public class MessageServiceImpl implements MessageApi {
             SmsTemplate template = smsTemplateMapper.selectOne(
                     new QueryWrapper<SmsTemplate>().eq("template_code", request.getTemplateCode()));
             if (template == null) {
-                throw new IllegalStateException("短信模板不存在: " + request.getTemplateCode());
+                throw new BizException(MessageErrorCode.SMS_TEMPLATE_NOT_FOUND);
             }
             smsProvider.send(request.getPhone(), template.getProviderTemplateId(), request.getParams(), template.getSignName());
         } catch (Exception e) {
