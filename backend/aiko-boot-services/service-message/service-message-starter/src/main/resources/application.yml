@@ -1,5 +1,36 @@
 spring:
   application:
     name: service-message
+  datasource:
+    url: jdbc:h2:mem:service_message;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  flyway:
+    locations: classpath:db/migration/message
+    table: flyway_schema_history_message
+  mail:
+    host: ${SMTP_HOST:smtp.example.com}
+    port: ${SMTP_PORT:465}
+    username: ${SMTP_USERNAME:}
+    password: ${SMTP_PASSWORD:}
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.ssl.enable: true
+aiko:
+  message:
+    sms:
+      provider: aliyun
+      aliyun:
+        access-key-id: ${SMS_ALIYUN_ACCESS_KEY_ID:}
+        access-key-secret: ${SMS_ALIYUN_ACCESS_KEY_SECRET:}
+      tencent:
+        secret-id: ${SMS_TENCENT_SECRET_ID:}
+        secret-key: ${SMS_TENCENT_SECRET_KEY:}
+        sdk-app-id: ${SMS_TENCENT_SDK_APP_ID:}
+    push:
+      jpush:
+        app-key: ${JPUSH_APP_KEY:}
+        master-secret: ${JPUSH_MASTER_SECRET:}
 server:
   port: 9103

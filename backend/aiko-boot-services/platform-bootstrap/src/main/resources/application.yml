@@ -12,6 +12,29 @@ spring:
     redis:
       host: localhost
       port: 6379
+  mail:
+    host: ${SMTP_HOST:smtp.example.com}
+    port: ${SMTP_PORT:465}
+    username: ${SMTP_USERNAME:}
+    password: ${SMTP_PASSWORD:}
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.ssl.enable: true
+aiko:
+  message:
+    sms:
+      provider: aliyun
+      aliyun:
+        access-key-id: ${SMS_ALIYUN_ACCESS_KEY_ID:}
+        access-key-secret: ${SMS_ALIYUN_ACCESS_KEY_SECRET:}
+      tencent:
+        secret-id: ${SMS_TENCENT_SECRET_ID:}
+        secret-key: ${SMS_TENCENT_SECRET_KEY:}
+        sdk-app-id: ${SMS_TENCENT_SDK_APP_ID:}
+    push:
+      jpush:
+        app-key: ${JPUSH_APP_KEY:}
+        master-secret: ${JPUSH_MASTER_SECRET:}
 sa-token:
   token-name: satoken
   timeout: 2592000

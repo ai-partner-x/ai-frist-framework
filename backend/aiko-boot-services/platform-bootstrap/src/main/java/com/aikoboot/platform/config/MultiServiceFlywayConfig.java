@@ -24,7 +24,7 @@ import javax.sql.DataSource;
 @Configuration
 public class MultiServiceFlywayConfig implements InitializingBean {
 
-    private static final String[] SERVICES_WITH_MIGRATIONS = {"user", "identity"};
+    private static final String[] SERVICES_WITH_MIGRATIONS = {"user", "identity", "message"};
 
     private final DataSource dataSource;
 
