@@ -12,4 +12,11 @@
     <artifactId>service-storage-api</artifactId>
     <packaging>jar</packaging>
     <name>Service Storage API</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+        </dependency>
+    </dependencies>
 </project>
