@@ -79,6 +79,8 @@ CREATE TABLE msg_inbox (
 
 所有 entity（`SmsTemplate`/`MessageLog`/`InboxMessage`）都 `extends com.aikoboot.orm.entity.BaseEntity`（`aiko-boot-starter-orm`，Task 3 已实现）——上面 SQL 里的 `tenant_id`/四个审计字段/`deleted` 列对应 `BaseEntity` 的字段，不要重新定义。
 
+**Controller 放在 `-biz` 里，不是 `-starter`**（`service-user` 那边一次真实 bug 修复得到的教训）：`platform-bootstrap`（合并部署壳）只依赖各服务的 `*-biz` 模块。Controller 放 `-starter` 的话，合并部署时这个类根本不在 classpath 上，接口不存在。`*-biz` 不是"没有 web 层"，只是"没有 `main()`"。
+
 ```
 service-message/
 ├── service-message-api/
@@ -90,7 +92,7 @@ service-message/
 │           ├── SendInAppRequest.java      # userId, title, content
 │           ├── SendPushRequest.java       # userId, title, content, extra(Map<String,String>)
 │           └── InboxMessageDTO.java       # id, title, content, readStatus, createdAt
-├── service-message-biz/
+├── service-message-biz/                   # 依赖 aiko-boot-starter-web（Controller 需要）
 │   └── com.aikoboot.message/
 │       ├── entity/ (SmsTemplate, MessageLog, InboxMessage)
 │       ├── mapper/
@@ -98,13 +100,15 @@ service-message/
 │       │   ├── SmsProvider.java           # send(phone, providerTemplateId, params, signName) 接口
 │       │   ├── AliyunSmsProvider.java     # implements SmsProvider, @ConditionalOnProperty(aiko.message.sms.provider=aliyun)
 │       │   └── TencentSmsProvider.java    # implements SmsProvider, @ConditionalOnProperty(aiko.message.sms.provider=tencent)
-│       └── service/
-│           └── MessageServiceImpl.java    # implements MessageApi，四个 send 方法 + 站内信查询/已读
-└── service-message-starter/
-    ├── controller/
-    │   └── MessageController.java         # /api/messages/sms, /email, /inbox 等
+│       ├── service/
+│       │   └── MessageServiceImpl.java    # implements MessageApi，四个 send 方法 + 站内信查询/已读
+│       └── controller/
+│           └── MessageController.java     # /api/messages/sms, /email, /inbox 等
+└── service-message-starter/               # 只有部署壳，不放业务代码
     └── application.yml                    # + 阿里云/腾讯云/JPush/SMTP 各自的配置块
 ```
+
+**另一个连带教训**：`platform-bootstrap` 的 `PlatformApplication` 用 `@MapperScan(value = "com.aikoboot", markerInterface = BaseMapper.class)` 扫描所有服务的 Mapper——`markerInterface` 这个限定必须有，光写包名会把 `MessageApi` 这类普通业务接口误判成 Mapper 代理，运行时报 `BindingException`。这个注解已经在骨架里配好了，不需要再改。
 
 ## 核心接口
 
@@ -136,7 +140,7 @@ public interface SmsProvider {
 
 `MessageServiceImpl.sendSms` 的流程：按 `templateCode` 查 `msg_sms_template` 拿到 `provider`/`providerTemplateId`/`signName` → 调用对应的 `SmsProvider.send(...)` → 无论成功失败都写一条 `msg_log`（失败时 `error_message` 记录异常信息，但不让异常向上抛出中断调用方——发消息失败不应该让业务主流程也失败，这是消息类服务的标准设计原则，`sendSms`/`sendEmail`/`sendPush` 内部自己 `try-catch` 并记录日志）。
 
-## API 端点（service-message-starter）
+## API 端点（service-message-biz）
 
 | 方法 | 路径 | 说明 |
 |---|---|---|

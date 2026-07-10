@@ -36,7 +36,7 @@ backend/
     ├── service-identity/                  # 🔲 骨架 + 详细 spec 已写，未实现（Sa-Token 登录鉴权 + RBAC）
     ├── service-message/                   # 🔲 骨架 + 详细 spec 已写，未实现（短信/邮件/站内信/推送）
     ├── service-storage/                   # 🔲 骨架 + 详细 spec 已写，未实现（MinIO/S3）
-    └── platform-bootstrap/                # ✅ 组合部署壳骨架，依赖已指向上述四个 *-biz
+    └── platform-bootstrap/                # ✅ 合并部署已用 service-user 真实验证过（create+query 全链路跑通，不只是 mvn package 通过）
 ```
 
 ✅ = 有真实代码且已验证跑通；🔲 = 只有空壳（pom + 占位 Application 类），业务逻辑待实现。
@@ -53,6 +53,8 @@ backend/
 6. **统一异常**：`BizException` + 各服务自定义 `ErrorCode` 枚举实现（不在 core 里预置业务错误码）
 7. **雪花 ID 序列化**：全局 Jackson 模块把 `Long` 序列化成字符串，前端拿到的 `id` 永远是字符串
 8. **端口分配**：`platform-bootstrap` 9100、`service-user` 9101、`service-identity` 9102、`service-message` 9103、`service-storage` 9104
+9. **Controller 必须放在 `-biz`，不是 `-starter`**（真实 bug 修复得到的教训，`service-user` 上踩过一次）：`platform-bootstrap` 只依赖 `*-biz` 模块，Controller 放 `-starter` 会导致合并部署下这个类根本不在 classpath 上，接口不存在。`*-biz` 不是"没有 web 层"，只是"没有 `main()`"——Controller、Filter、`@RestControllerAdvice`、`aiko-boot-starter-web` 依赖都要放 `-biz`；`-starter` 只保留 `Application.java` + `application.yml`
+10. **`platform-bootstrap` 的 `@MapperScan` 必须带 `markerInterface = BaseMapper.class`**（同一次 bug 修复连带发现）：光写 `@MapperScan("com.aikoboot")` 会把 `UserApi` 这类普通业务接口也误判成 MyBatis Mapper 代理，运行时报 `BindingException`，且会被通用异常处理吞掉表现为莫名其妙的 500。这个已经在 `PlatformApplication` 里配好，新增服务不需要改这个文件，但如果发现合并部署报 500/启动失败，先检查这条
 
 ## 服务间关系图
 

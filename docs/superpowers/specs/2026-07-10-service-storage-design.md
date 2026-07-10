@@ -43,6 +43,8 @@ CREATE TABLE file_record (
 
 `FileRecord` entity `extends com.aikoboot.orm.entity.BaseEntity`（`aiko-boot-starter-orm`，Task 3 已实现）——上面 SQL 里的 `tenant_id`/四个审计字段/`deleted` 列对应 `BaseEntity` 的字段，不要重新定义。
 
+**Controller 放在 `-biz` 里，不是 `-starter`**（`service-user` 那边一次真实 bug 修复得到的教训）：`platform-bootstrap`（合并部署壳）只依赖各服务的 `*-biz` 模块。Controller 放 `-starter` 的话，合并部署时这个类根本不在 classpath 上，接口不存在。`*-biz` 不是"没有 web 层"，只是"没有 `main()`"。
+
 ```
 service-storage/
 ├── service-storage-api/
@@ -51,19 +53,21 @@ service-storage/
 │       └── dto/
 │           ├── FileRecordDTO.java          # id, storageKey, originalFilename, contentType, sizeBytes, url
 │           └── PresignedUrlDTO.java        # url, expiresAt
-├── service-storage-biz/
+├── service-storage-biz/                    # 依赖 aiko-boot-starter-web（Controller 需要）
 │   └── com.aikoboot.storage/
 │       ├── entity/FileRecord.java
 │       ├── mapper/FileRecordMapper.java
 │       ├── config/
 │       │   └── S3ClientConfig.java         # S3Client Bean（endpoint override + path-style + region）
-│       └── service/
-│           └── StorageServiceImpl.java     # implements StorageApi
-└── service-storage-starter/
-    ├── controller/
-    │   └── FileController.java             # POST 上传（multipart）/ GET 下载或预签名URL / DELETE
+│       ├── service/
+│       │   └── StorageServiceImpl.java     # implements StorageApi
+│       └── controller/
+│           └── FileController.java         # POST 上传（multipart）/ GET 下载或预签名URL / DELETE
+└── service-storage-starter/                # 只有部署壳，不放业务代码
     └── application.yml                     # + aiko.storage.s3.* 配置块
 ```
+
+**另一个连带教训**：`platform-bootstrap` 的 `PlatformApplication` 用 `@MapperScan(value = "com.aikoboot", markerInterface = BaseMapper.class)` 扫描所有服务的 Mapper——`markerInterface` 这个限定必须有，光写包名会把 `StorageApi` 这类普通业务接口误判成 Mapper 代理，运行时报 `BindingException`。这个注解已经在骨架里配好了，不需要再改。
 
 ## 核心接口
 
@@ -120,7 +124,7 @@ public class S3ClientConfig {
 
 **预签名 URL**：用 `S3Presigner`（同一个 SDK 里的类，需要额外一个 `S3Presigner` Bean，构造方式和 `S3Client` 类似）生成有时效性的临时访问链接，避免直接把桶设为公开可读——这是对象存储的标准安全实践，私有桶 + 按需签发临时链接。
 
-## API 端点（service-storage-starter）
+## API 端点（service-storage-biz）
 
 | 方法 | 路径 | 说明 |
 |---|---|---|

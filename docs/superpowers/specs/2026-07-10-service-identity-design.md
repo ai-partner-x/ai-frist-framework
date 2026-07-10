@@ -99,6 +99,8 @@ CREATE TABLE sys_user_role (
 
 所有 entity（`UserCredential`/`Role`/`Permission`/`RolePermission`/`UserRole`）都 `extends com.aikoboot.orm.entity.BaseEntity`（`aiko-boot-starter-orm`，Task 3 已实现）——上面 SQL 里的 `tenant_id`/四个审计字段/`deleted` 列就是对应 `BaseEntity` 的字段，不要重新定义，也不要在业务字段之外再手写这几列。
 
+**Controller 放在 `-biz` 里，不是 `-starter`**（这是从 `service-user` 的一次真实 bug 修复中得到的教训）：`platform-bootstrap`（合并部署壳）只依赖各服务的 `*-biz` 模块，不依赖 `*-starter`。如果 Controller 放在 `-starter`，合并部署时这个类根本不在 classpath 上，接口完全不存在。`*-biz` 不是"没有 web 层"，只是"没有 `main()`"——Controller、`aiko-boot-starter-web` 依赖，都应该放 `-biz`；`-starter` 只保留 `Application.java` + `application.yml`（独立部署壳该有的东西）。
+
 ```
 service-identity/
 ├── service-identity-api/
@@ -108,20 +110,22 @@ service-identity/
 │           ├── LoginRequest.java          # username, password
 │           ├── LoginResponse.java         # token, userId, username, roles, permissions
 │           └── CurrentUserDTO.java        # userId, username, roles[], permissions[]
-├── service-identity-biz/
+├── service-identity-biz/                  # 依赖 aiko-boot-starter-web（Controller 需要）
 │   └── com.aikoboot.identity/
 │       ├── entity/ (UserCredential, Role, Permission, RolePermission, UserRole)
 │       ├── mapper/ (对应 5 张表)
 │       ├── service/
 │       │   ├── IdentityServiceImpl.java   # implements IdentityApi
 │       │   └── AikoStpInterfaceImpl.java  # implements Sa-Token 的 StpInterface，供框架查询角色/权限
-│       └── config/
-│           └── PasswordEncoderConfig.java # BCryptPasswordEncoder Bean
-└── service-identity-starter/
-    ├── controller/
-    │   └── AuthController.java            # /api/auth/login, /api/auth/logout, /api/auth/current
+│       ├── config/
+│       │   └── PasswordEncoderConfig.java # BCryptPasswordEncoder Bean
+│       └── controller/
+│           └── AuthController.java        # /api/auth/login, /api/auth/logout, /api/auth/current
+└── service-identity-starter/              # 只有部署壳，不放业务代码
     └── application.yml                    # + sa-token 配置块 + redis 连接 + flyway locations
 ```
+
+**另一个连带教训**：`platform-bootstrap` 的 `PlatformApplication` 需要 `@MapperScan(value = "com.aikoboot", markerInterface = BaseMapper.class)` 才能扫到这个服务新增的 Mapper（`markerInterface` 这个限定必须有，光写包名会把 `IdentityApi` 这类普通业务接口也误判成 Mapper 代理，运行时报 `BindingException`）——这个改动已经在骨架里做好了，这里只是提醒：如果发现 `platform-bootstrap` 又启动失败或者接口报 500，先检查这个注解还在不在。
 
 ## 核心接口
 
@@ -144,9 +148,9 @@ public interface IdentityApi {
 
 **权限查询**（`AikoStpInterfaceImpl implements StpInterface`）：Sa-Token 框架在 `@SaCheckPermission("system:user:add")` 注解触发时会回调这个接口的 `getPermissionList(loginId, loginType)`/`getRoleList(loginId, loginType)`，直接查 `sys_user_role` → `sys_role_permission` → `sys_permission` 拼出字符串列表返回，不需要手动维护缓存（Sa-Token 自己在 Session 级别做了缓存）。
 
-**登录态与 `CurrentUserContext` 的接线**：新增一个 `AikoIdentityFilter`（放在 `service-identity` 里，不放共享的 `aiko-boot-starter-web`——因为只有接了身份服务的应用才需要它），在请求进入时调用 `StpUtil.getLoginIdDefaultNull()`，取到就 `CurrentUserContext.setUserId(...)`，`finally` 里 `clear()`（和 `TenantContextFilter` 同样的模式，之前的最终审查已经提醒过这个点要配对）。
+**登录态与 `CurrentUserContext` 的接线**：新增一个 `AikoIdentityFilter`（放在 `service-identity-biz` 里，不放共享的 `aiko-boot-starter-web`——因为只有接了身份服务的应用才需要它；同样因为"Controller 放 -biz"那条规则，这个 Filter 也必须放 `-biz` 才能在合并部署里生效），在请求进入时调用 `StpUtil.getLoginIdDefaultNull()`，取到就 `CurrentUserContext.setUserId(...)`，`finally` 里 `clear()`（和 `TenantContextFilter` 同样的模式，之前的最终审查已经提醒过这个点要配对）。
 
-## API 端点（service-identity-starter）
+## API 端点（service-identity-biz）
 
 | 方法 | 路径 | 说明 |
 |---|---|---|
@@ -154,7 +158,7 @@ public interface IdentityApi {
 | POST | `/api/auth/logout` | 登出（`StpUtil.logout()`） |
 | GET | `/api/auth/current` | 当前登录用户信息（从 Token 解析） |
 
-鉴权失败（未登录/权限不足）时的响应：Sa-Token 抛出的 `NotLoginException`/`NotPermissionException` 需要在 `service-identity-starter` 里补一个 `@RestControllerAdvice`（不放共享 `GlobalExceptionHandler` 里，因为 Sa-Token 相关异常只有接了身份服务的应用才可能遇到），统一转成 `Result.fail(401, "未登录")` / `Result.fail(403, "无权限")`。
+鉴权失败（未登录/权限不足）时的响应：Sa-Token 抛出的 `NotLoginException`/`NotPermissionException` 需要在 `service-identity-biz` 里补一个 `@RestControllerAdvice`（不放共享 `GlobalExceptionHandler` 里，因为 Sa-Token 相关异常只有接了身份服务的应用才可能遇到；同样必须放 `-biz` 而不是 `-starter`，理由同 Controller），统一转成 `Result.fail(401, "未登录")` / `Result.fail(403, "无权限")`。
 
 ## 对 service-user-api 的扩展需求（这次一起做）
 
