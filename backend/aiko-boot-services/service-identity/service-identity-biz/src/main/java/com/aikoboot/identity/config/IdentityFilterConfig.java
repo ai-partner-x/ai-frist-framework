@@ -1,18 +1,15 @@
 package com.aikoboot.identity.config;
 
-import com.aikoboot.identity.filter.AikoIdentityFilter;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
-import org.springframework.context.annotation.Bean;
+import com.aikoboot.identity.filter.AikoIdentityInterceptor;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-public class IdentityFilterConfig {
+public class IdentityFilterConfig implements WebMvcConfigurer {
 
-    @Bean
-    public FilterRegistrationBean<AikoIdentityFilter> aikoIdentityFilter() {
-        FilterRegistrationBean<AikoIdentityFilter> registration = new FilterRegistrationBean<>();
-        registration.setFilter(new AikoIdentityFilter());
-        registration.setOrder(Integer.MIN_VALUE + 1);
-        return registration;
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(new AikoIdentityInterceptor());
     }
 }
