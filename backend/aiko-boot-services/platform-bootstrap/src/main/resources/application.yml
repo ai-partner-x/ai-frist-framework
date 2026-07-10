@@ -35,6 +35,13 @@ aiko:
       jpush:
         app-key: ${JPUSH_APP_KEY:}
         master-secret: ${JPUSH_MASTER_SECRET:}
+  storage:
+    s3:
+      endpoint: ${STORAGE_S3_ENDPOINT:http://localhost:9000}
+      region: us-east-1
+      bucket: ${STORAGE_S3_BUCKET:aiko-boot-dev}
+      access-key: ${STORAGE_S3_ACCESS_KEY:}
+      secret-key: ${STORAGE_S3_SECRET_KEY:}
 sa-token:
   token-name: satoken
   timeout: 2592000
