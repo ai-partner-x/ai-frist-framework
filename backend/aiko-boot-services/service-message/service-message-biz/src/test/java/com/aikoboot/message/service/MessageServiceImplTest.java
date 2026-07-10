@@ -1,6 +1,7 @@
 package com.aikoboot.message.service;
 
 import cn.jiguang.sdk.api.PushApi;
+import com.aikoboot.core.context.CurrentUserContext;
 import com.aikoboot.message.api.dto.SendEmailRequest;
 import com.aikoboot.message.api.dto.SendInAppRequest;
 import com.aikoboot.message.api.dto.SendPushRequest;
@@ -12,12 +13,16 @@ import com.aikoboot.message.entity.SmsTemplate;
 import com.aikoboot.message.mapper.InboxMessageMapper;
 import com.aikoboot.message.mapper.MessageLogMapper;
 import com.aikoboot.message.mapper.SmsTemplateMapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.springframework.mail.javamail.JavaMailSender;
 
 import java.util.Map;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.isNull;
@@ -148,9 +153,32 @@ class MessageServiceImplTest {
 
     @Test
     void markInboxRead_updatesViaUpdateWrapper_notUpdateById() {
-        service.markInboxRead(100L);
+        CurrentUserContext.setUserId("42");
+        try {
+            service.markInboxRead(100L);
 
-        // 关键断言：用 UpdateWrapper 精确指定列，不是 updateById(entity) 整体覆盖
-        verify(inboxMessageMapper, times(1)).update(isNull(), any());
+            // 关键断言：用 UpdateWrapper 精确指定列，不是 updateById(entity) 整体覆盖
+            verify(inboxMessageMapper, times(1)).update(isNull(), any());
+        } finally {
+            CurrentUserContext.clear();
+        }
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    void markInboxRead_scopesUpdateToCurrentUser_preventsHorizontalIdor() {
+        // 回归测试：修复前只按 id 限定，任何登录用户都能标记别人的站内信为已读
+        // （水平越权）。修复后 UpdateWrapper 的 WHERE 条件里必须同时带上 user_id。
+        CurrentUserContext.setUserId("42");
+        try {
+            service.markInboxRead(100L);
+
+            ArgumentCaptor<UpdateWrapper<InboxMessage>> captor = ArgumentCaptor.forClass(UpdateWrapper.class);
+            verify(inboxMessageMapper, times(1)).update(isNull(), captor.capture());
+
+            assertThat(captor.getValue().getSqlSegment()).contains("user_id");
+        } finally {
+            CurrentUserContext.clear();
+        }
     }
 }

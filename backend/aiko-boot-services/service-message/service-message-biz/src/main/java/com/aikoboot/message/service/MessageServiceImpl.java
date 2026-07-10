@@ -19,6 +19,7 @@ import com.aikoboot.message.entity.SmsTemplate;
 import com.aikoboot.message.mapper.InboxMessageMapper;
 import com.aikoboot.message.mapper.MessageLogMapper;
 import com.aikoboot.message.mapper.SmsTemplateMapper;
+import com.aikoboot.message.util.CurrentUserResolver;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -143,12 +144,16 @@ public class MessageServiceImpl implements MessageApi {
 
     @Override
     public void markInboxRead(Long messageId) {
+        // 只按 id 限定的话，任何登录用户都能标记别人的站内信为已读（水平越权）——
+        // 这里额外限定 user_id = 当前登录用户，非本人的消息这条 UPDATE 会匹配 0 行，
+        // 静默无效果，不对外暴露"这条消息是否存在/属于别人"的信息。
         inboxMessageMapper.update(null, new UpdateWrapper<InboxMessage>()
                 .set("read_status", 1)
                 .set("read_at", LocalDateTime.now())
                 .set("updated_at", LocalDateTime.now())
                 .set("updated_by", CurrentUserContext.getUserId())
-                .eq("id", messageId));
+                .eq("id", messageId)
+                .eq("user_id", CurrentUserResolver.requireUserId()));
     }
 
     private void writeLog(String channel, String target, String subject, String content, String status, String errorMessage) {

@@ -6,7 +6,7 @@ import com.aikoboot.message.api.dto.SendEmailRequest;
 import com.aikoboot.message.api.dto.SendInAppRequest;
 import com.aikoboot.message.api.dto.SendPushRequest;
 import com.aikoboot.message.api.dto.SendSmsRequest;
-import com.aikoboot.core.context.CurrentUserContext;
+import com.aikoboot.message.util.CurrentUserResolver;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -51,7 +51,7 @@ public class MessageController {
 
     @GetMapping("/inbox")
     public List<InboxMessageDTO> listInbox(@RequestParam(defaultValue = "false") boolean unreadOnly) {
-        Long userId = Long.valueOf(CurrentUserContext.getUserId());
+        Long userId = CurrentUserResolver.requireUserId();
         return messageApi.listInbox(userId, unreadOnly);
     }
 
