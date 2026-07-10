@@ -9,7 +9,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.mock.web.MockMultipartFile;
-import software.amazon.awssdk.core.sync.ResponseTransformer;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
@@ -84,7 +83,9 @@ class StorageServiceImplTest {
 
         assertThatThrownBy(() -> service.download(999L)).isInstanceOf(IllegalStateException.class);
 
-        verify(s3Client, times(0)).getObject(any(GetObjectRequest.class), any(ResponseTransformer.class));
+        // download() 实际调用的是 getObjectAsBytes，不是 getObject(request, transformer) 那个重载——
+        // 验证方法必须和被测代码真正调用的方法一致，否则这条断言对"改坏 download 逻辑"毫无防护力。
+        verify(s3Client, times(0)).getObjectAsBytes(any(GetObjectRequest.class));
     }
 
     @Test
