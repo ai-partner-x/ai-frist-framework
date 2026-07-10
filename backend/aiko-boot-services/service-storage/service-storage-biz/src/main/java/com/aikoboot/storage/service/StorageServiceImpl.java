@@ -1,10 +1,12 @@
 package com.aikoboot.storage.service;
 
+import com.aikoboot.core.exception.BizException;
 import com.aikoboot.storage.api.StorageApi;
 import com.aikoboot.storage.api.dto.FileRecordDTO;
 import com.aikoboot.storage.api.dto.PresignedUrlDTO;
 import com.aikoboot.storage.config.StorageProperties;
 import com.aikoboot.storage.entity.FileRecord;
+import com.aikoboot.storage.exception.StorageErrorCode;
 import com.aikoboot.storage.mapper.FileRecordMapper;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import org.springframework.stereotype.Service;
@@ -120,7 +122,7 @@ public class StorageServiceImpl implements StorageApi {
     private FileRecord requireRecord(Long fileRecordId) {
         FileRecord record = fileRecordMapper.selectById(fileRecordId);
         if (record == null) {
-            throw new IllegalStateException("文件不存在: " + fileRecordId);
+            throw new BizException(StorageErrorCode.FILE_NOT_FOUND);
         }
         return record;
     }

@@ -1,5 +1,6 @@
 package com.aikoboot.storage.service;
 
+import com.aikoboot.core.exception.BizException;
 import com.aikoboot.storage.api.dto.FileRecordDTO;
 import com.aikoboot.storage.api.dto.PresignedUrlDTO;
 import com.aikoboot.storage.config.StorageProperties;
@@ -78,14 +79,31 @@ class StorageServiceImplTest {
     }
 
     @Test
-    void download_whenRecordMissing_throwsWithoutCallingS3() {
+    void download_whenRecordMissing_throwsBizExceptionWithFileNotFoundCode() {
         when(fileRecordMapper.selectById(999L)).thenReturn(null);
 
-        assertThatThrownBy(() -> service.download(999L)).isInstanceOf(IllegalStateException.class);
+        // 关键断言：改用 BizException + StorageErrorCode 后，客户端能拿到明确的 404，
+        // 不再是被 GlobalExceptionHandler 兜底成语义不明的 500。
+        assertThatThrownBy(() -> service.download(999L))
+                .isInstanceOf(BizException.class)
+                .extracting(ex -> ((BizException) ex).getCode())
+                .isEqualTo(404);
 
         // download() 实际调用的是 getObjectAsBytes，不是 getObject(request, transformer) 那个重载——
         // 验证方法必须和被测代码真正调用的方法一致，否则这条断言对"改坏 download 逻辑"毫无防护力。
         verify(s3Client, times(0)).getObjectAsBytes(any(GetObjectRequest.class));
+    }
+
+    @Test
+    void getPresignedUrl_whenRecordMissing_throwsBizExceptionWithFileNotFoundCode() {
+        when(fileRecordMapper.selectById(999L)).thenReturn(null);
+
+        assertThatThrownBy(() -> service.getPresignedUrl(999L, 3600))
+                .isInstanceOf(BizException.class)
+                .extracting(ex -> ((BizException) ex).getCode())
+                .isEqualTo(404);
+
+        verify(s3Presigner, times(0)).presignGetObject(any(GetObjectPresignRequest.class));
     }
 
     @Test
